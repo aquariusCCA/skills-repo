@@ -1,0 +1,4 @@
+interface:
+  display_name: "Source Code Refactoring"
+  short_description: "安全重構既有程式碼並保護行為"
+  default_prompt: "Use $source-code-refactoring to refactor existing code safely: establish the relevant code context, use any source-code-reading Markdown note when provided, preserve behavior unless explicitly allowed to change it, make scoped changes, and verify with targeted tests or builds."
