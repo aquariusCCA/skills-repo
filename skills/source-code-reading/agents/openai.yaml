@@ -1,0 +1,4 @@
+interface:
+  display_name: "Source Code Reading"
+  short_description: "閱讀、追蹤與整理專案原始碼理解筆記"
+  default_prompt: "Use $source-code-reading to understand an unfamiliar file, feature flow, module, or call chain with grounded evidence."
