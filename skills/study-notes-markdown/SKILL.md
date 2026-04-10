@@ -11,16 +11,16 @@ description: 用於整理 Markdown 課程筆記、教材筆記、技術學習筆
 
 ---
 
-# 如何使用這個 skill
+# 輸入契約
+
+當使用者要求整理 Markdown 學習筆記，且目標是提升理解、閱讀、查找、回查或複習效率，而不是單純濃縮成摘要時，應套用本 skill。
+
+可接受的輸入形式包括：
+- 明確提到 `study-notes-markdown`
+- 雖未提到 skill 名稱，但需求描述符合本 skill 目的
+- 指定整理單篇筆記、章節筆記或整份筆記倉庫
 
 使用者不需要在 Markdown 檔案中加入特殊語法，也不需要在終端執行指令。
-當使用者要求整理某個學習筆記檔案，且提到 `study-notes-markdown` 或描述符合本 skill 的用途時，Codex 應讀取本 skill 並依照其規則處理目標檔案。
-
-典型請求：
-
-```text
-請用 study-notes-markdown 整理 `XXX.md`
-```
 
 ---
 
