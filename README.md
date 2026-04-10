@@ -15,6 +15,14 @@ skills-repo/
     │   ├── SKILL.md
     │   ├── agents/
     │   └── references/
+    ├── source-code-refactoring/
+    │   ├── SKILL.md
+    │   ├── agents/
+    │   ├── prompts/
+    │   └── references/
+    ├── spec-to-code/
+    │   ├── SKILL.md
+    │   └── agents/
     └── study-notes-markdown/
         ├── SKILL.md
         └── references/
@@ -25,6 +33,8 @@ skills-repo/
 - `study-notes-markdown`: 將學習筆記整理成 Markdown 結構。
 - `repair-study-notes`: 修復、整理或重建學習筆記內容。
 - `source-code-reading`: 閱讀、追蹤與整理專案原始碼理解筆記。
+- `source-code-refactoring`: 安全重構既有程式碼並保護行為。
+- `spec-to-code`: 將需求描述、規格或 ticket 落地成可驗證的程式碼變更。
 
 ## 新增 Skill
 

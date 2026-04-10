@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec To Code"
+  short_description: "把需求描述落地成可驗證程式碼"
+  default_prompt: "Use $spec-to-code to turn a product or engineering spec into scoped code changes, tests, and verification notes."
