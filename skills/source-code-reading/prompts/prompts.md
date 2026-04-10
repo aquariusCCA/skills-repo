@@ -17,7 +17,7 @@ Use $source-code-reading
 goal: [這次閱讀是為了什麼，例如理解、除錯前置、重構前置、功能追蹤]
 entry: [入口檔案 / 類別 / 方法 / 路由 / 端點 / 模組 / UI 動作 / 錯誤位置]
 mode: [file / feature / module]
-expected_output: [直接回答 / 結構化筆記 / 呼叫鏈 / 資料流 / 下一步閱讀清單]
+expected_output: [Markdown 格式筆記 / 直接回答 / 呼叫鏈 / 資料流 / 下一步閱讀清單 / 輸出到指定 .md 檔案]
 constraints: [只看前端 / 只看後端 / 只看 SQL / 限制輸出長度 / 限制範圍]
 max_depth: [可選。若不填，請依最小閉環原則決定展開範圍]
 ```
@@ -34,7 +34,7 @@ Use $source-code-reading
 goal: 修改前先理解這個檔案的角色與關鍵邏輯
 mode: file
 entry: [檔案路徑]
-expected_output: 結構化筆記，包含檔案角色、主要結構、已確認行為、依賴互動、待驗證、下一步閱讀
+expected_output: Markdown 格式筆記，包含檔案角色、主要結構、已確認行為、依賴互動、待驗證、下一步閱讀
 constraints: 只看與這個檔案直接相關的依賴
 ```
 
@@ -90,7 +90,7 @@ Use $source-code-reading
 goal: 理解 [模組名稱] 的責任、主要檔案與典型流程
 mode: module
 entry: [模組目錄或入口檔案]
-expected_output: 模組總覽筆記，包含主要檔案與角色、典型流程、依賴、耦合風險、已確認 / 合理推論 / 待驗證
+expected_output: Markdown 格式模組總覽筆記，包含主要檔案與角色、典型流程、依賴、耦合風險、已確認 / 合理推論 / 待驗證
 constraints: 先做保守掃描，不要擴張到不相關模組
 ```
 
@@ -376,7 +376,7 @@ constraints: 保持精簡
 
 - 入口越具體，結果通常越好。
 - 若你只知道功能名稱，不知道入口，就用「找入口模板」。
-- 若你想建立可重複使用的筆記，優先指定 `expected_output: 結構化筆記`。
+- 若你想建立可重複使用的筆記，優先指定 `expected_output: Markdown 格式筆記`；若要落檔，明確指定 `.md` 輸出路徑。
 - 若你只是在修 bug 前想先掌握局部流程，優先指定 `constraints: 只看直接相關檔案`。
 - 若你怕它讀太多，可指定 `max_depth`；不指定時，就讓它依最小閉環原則停止。
 - 若你只要結論，不要長文，直接在 `expected_output` 寫「直接回答」或「先短答」。

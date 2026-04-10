@@ -1,4 +1,4 @@
 interface:
   display_name: "Source Code Reading"
   short_description: "閱讀、追蹤與整理專案原始碼理解筆記"
-  default_prompt: "Use $source-code-reading to understand an unfamiliar file, feature flow, module, or call chain. Start from a concrete entry, read only directly relevant dependencies, expand until you reach the smallest explanatory loop that answers the question, separate confirmed findings from inference, and end with the highest-value next file to inspect."
+  default_prompt: "Use $source-code-reading to understand an unfamiliar file, feature flow, module, or call chain. Start from a concrete entry, read only directly relevant dependencies, expand until you reach the smallest explanatory loop that answers the question, separate confirmed findings from inference, and output Markdown-format notes unless the user requested a different format or a specific .md file path."
