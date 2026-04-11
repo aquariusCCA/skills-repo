@@ -1,0 +1,4 @@
+interface:
+  display_name: "Study Notes Markdown"
+  short_description: "保留教材型正文，重構 Markdown 學習筆記的導航、查找與複習能力"
+  default_prompt: "Use $study-notes-markdown to reorganize Markdown study notes while preserving the original teaching-oriented body text. Improve structure, navigation, search entry points, and review scaffolding; split oversized notes before polishing them, synchronize affected README navigation when needed, and avoid collapsing the note into a summary or cram sheet."
