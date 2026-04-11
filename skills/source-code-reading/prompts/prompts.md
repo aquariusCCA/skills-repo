@@ -2,9 +2,9 @@
 
 這份檔案放「怎麼問」。
 
-目標是讓使用者能快速提供清楚的閱讀任務，並和 `SKILL.md` 的規則一致：從具體入口開始、先縮邊界、只展開直接相關依賴、追到足以回答問題的最小閉環，並在輸出中區分已確認、合理推論與待驗證。
+目標是讓使用者能快速提供清楚的閱讀任務，並和 `SKILL.md` 的規則一致：從具體入口開始、先縮邊界、只展開直接相關依賴、追到足以回答問題的最小閉環，並在輸出中區分已確認、合理推論、待驗證與證據衝突。
 
-目前的 `SKILL.md` 已採用「硬流程 + 最低輸出契約」設計，不再依賴額外輸出模板。提問時最重要的是把 `goal`、`entry`、`mode`、`project_boundary`、`expected_output` 講清楚，讓 skill 能直接照流程執行。
+目前的 `SKILL.md` 已採用「核心規則 + references 導航」設計。提問時最重要的是把 `goal`、`entry`、`mode`、`project_boundary`、`expected_output` 講清楚，讓 skill 先用主檔規則執行，再只在需要時讀 `references/` 裡的深度追查、框架 playbook 或輸出契約。
 
 較長、結構化、可重用或跨檔案的閱讀筆記，建議寫入 `.md` 檔案；短答案、一次性判斷或只要下一步清單時，才要求直接在對話中回覆。若未指定輸出路徑，skill 會依序優先使用專案既有的 `docs/code-reading/`、`notes/code-reading/`、`docs/` 或 `notes/` 下合理子路徑；若都沒有，使用 `docs/code-reading/`。
 
@@ -17,10 +17,12 @@
 - `mode: file`：理解單一檔案。
 - `mode: feature`：追蹤一個功能、端點、按鈕、路由、錯誤流程、批次觸發鏈或跨檔流程。
 - `mode: module`：理解一個有明確邊界的目錄、package、domain、功能群、workspace、service 或子系統。
+- `mode: debug-trace`：從錯誤訊息、堆疊、log 或異常行為往回追到最小閉環。
 
 如果只提供檔案路徑，通常用 `file`。
 如果提供功能名稱加入口，通常用 `feature`。
 如果提供目錄、package、workspace、service 或模組並要求總覽，通常用 `module`。
+如果提供的是錯誤訊息、stack trace、log 或異常現象，通常用 `debug-trace`。
 
 ---
 
@@ -56,7 +58,7 @@ expected_output: [寫入 .md 檔案 / 直接在對話中短答]
 如果你希望輸出更保守，可以把 `expected_output` 補成：
 
 ```text
-expected_output: 直接在對話中回答，至少包含範圍與入口、已確認、待驗證、下一步
+expected_output: 直接在對話中回答，至少包含範圍與入口、已確認、待驗證、證據衝突（若有）、下一步
 ```
 
 ### 不知道入口時
@@ -71,6 +73,12 @@ entry: [功能名稱 / 關鍵字 / 畫面名稱 / 錯誤訊息]
 mode: feature
 expected_output: 將閱讀筆記寫入 [docs/code-reading/[feature-name].md]。先列出 2 到 4 個最可能入口與判斷依據，再從最保守的入口追流程，最後列下一步閱讀建議
 constraints: 只做輕量掃描；先看 manifest、workspace、路由、設定與符號搜尋結果
+```
+
+如果你明確希望 skill 啟用更完整的找入口策略，可以把 `expected_output` 或 `constraints` 裡補上：
+
+```text
+如果入口不明，請再讀 references/deep-tracing.md 的退避策略，不要直接亂追。
 ```
 
 ### 多候選入口時
@@ -172,7 +180,7 @@ goal: 理解 [模組名稱] 的責任、主要檔案與典型流程
 entry: [模組目錄 / package / workspace / service / 入口檔案]
 mode: module
 project_boundary: [可選。若 entry 已經是明確邊界可省略]
-expected_output: 將模組總覽筆記寫入 [docs/code-reading/[module-name]-overview.md]，包含主要檔案與角色、典型流程、依賴、耦合風險、已確認 / 合理推論 / 待驗證
+expected_output: 將模組總覽筆記寫入 [docs/code-reading/[module-name]-overview.md]，包含主要檔案與角色、典型流程、依賴、耦合風險、已確認 / 合理推論 / 待驗證 / 證據衝突（若有）
 constraints: 先做保守掃描；只整理實際讀過的檔案能支撐的內容；不要把目錄下每個檔案逐一摘要
 ```
 
@@ -214,6 +222,21 @@ mode: feature
 project_boundary: apps/web
 expected_output: 將筆記寫入 docs/code-reading/pdf-render-debug-context.md，聚焦初始化、切頁、縮放相關呼叫鏈，指出最可疑區域與待驗證點
 constraints: 只看直接相關檔案
+```
+
+### 直接用 `debug-trace` 追錯誤來源
+
+適合：手上主要是錯誤訊息、stack trace、log 或異常現象，而不是明確功能入口。
+
+```text
+Use $source-code-reading
+
+goal: 從錯誤訊息或異常現象往回追到最小閉環，先定位問題邊界
+entry: [錯誤訊息 / stack trace / log 關鍵字 / 異常現象]
+mode: debug-trace
+project_boundary: [可選。app / service / package / workspace]
+expected_output: 將筆記寫入 [docs/code-reading/[bug-name]-trace.md]，至少包含這次要回答的問題、最可能入口、主路徑、已確認、待驗證、證據衝突（若有）、目前停在哪裡、下一步
+constraints: 若入口不明，請使用 references/deep-tracing.md 的退避策略；不要直接開始大範圍掃描
 ```
 
 ### 重構 / 遷移 / 重寫前置閱讀
@@ -286,7 +309,7 @@ goal: 追蹤 [跨界流程] 的實際路徑
 entry: [前端動作 / API / gateway route / service method / queue topic]
 mode: feature
 project_boundary: [涉及的 app / service / package，例如 apps/web + services/payment]
-expected_output: 將筆記寫入 [docs/code-reading/[flow-name]-cross-boundary-flow.md]。先標出跨界點，再分段追蹤每一段最小閉環，列出已確認、合理推論、待驗證
+expected_output: 將筆記寫入 [docs/code-reading/[flow-name]-cross-boundary-flow.md]。先標出跨界點，再分段追蹤每一段最小閉環，列出已確認、合理推論、待驗證、證據衝突（若有）
 constraints: 不要把整個系統攤平；只追此流程直接經過的跨界點
 ```
 
@@ -318,7 +341,7 @@ goal: 追蹤 [API / endpoint] 的實際後端流程
 entry: [controller 類別 / method / request path]
 mode: feature
 project_boundary: [可選。service / package]
-expected_output: 將筆記寫入 [docs/code-reading/[endpoint-name]-backend-flow.md]，包含流程摘要、呼叫鏈、DTO / entity 流動、驗證、交易邊界、查詢或更新點、待驗證、下一步閱讀
+expected_output: 將筆記寫入 [docs/code-reading/[endpoint-name]-backend-flow.md]，包含流程摘要、呼叫鏈、DTO / entity 流動、驗證、交易邊界、查詢或更新點、待驗證、證據衝突（若有）、下一步閱讀
 constraints: 追到足以解釋 request 到 response 的最小閉環
 ```
 
@@ -372,7 +395,7 @@ goal: 追蹤 [畫面 / 互動] 的前端流程
 entry: [route / page component / button / composable / store]
 mode: feature
 project_boundary: [可選。app / workspace]
-expected_output: 將筆記寫入 [docs/code-reading/[interaction-name]-frontend-flow.md]，包含流程摘要、元件邊界、props/events/store/API、狀態轉換、渲染條件、待驗證、下一步閱讀
+expected_output: 將筆記寫入 [docs/code-reading/[interaction-name]-frontend-flow.md]，包含流程摘要、元件邊界、props/events/store/API、狀態轉換、渲染條件、待驗證、證據衝突（若有）、下一步閱讀
 constraints: 追到能解釋互動如何觸發資料更新與畫面變化的最小閉環
 ```
 
@@ -414,7 +437,7 @@ goal: 追蹤 [批次任務 / worker 名稱] 的觸發條件、主要流程與副
 entry: [scheduler / job class / command / queue consumer / worker]
 mode: feature
 project_boundary: [可選。service / package / workspace]
-expected_output: 將筆記寫入 [docs/code-reading/[job-name]-batch-flow.md]，包含 trigger -> job / consumer -> service -> persistence / side effect 的流程摘要，並標示重試邏輯、資料更新點、待驗證與下一步閱讀
+expected_output: 將筆記寫入 [docs/code-reading/[job-name]-batch-flow.md]，包含 trigger -> job / consumer -> service -> persistence / side effect 的流程摘要，並標示重試邏輯、資料更新點、待驗證、證據衝突（若有）與下一步閱讀
 constraints: 聚焦實際觸發鏈與資料更新點
 ```
 
@@ -477,7 +500,7 @@ goal: 保守地理解 [目標]
 entry: [入口]
 mode: [file / feature / module]
 project_boundary: [可選。app / service / package / workspace]
-expected_output: 將筆記寫入 [docs/code-reading/[target]-confirmed-only.md]，只列已確認行為、引用的檔案、待驗證；若需推論請單獨列在合理推論區塊
+expected_output: 將筆記寫入 [docs/code-reading/[target]-confirmed-only.md]，只列已確認行為、引用的檔案、待驗證；若需推論請單獨列在合理推論區塊；若證據互相矛盾，請單獨列在證據衝突區塊
 constraints: 結論必須能對應到已開啟檔案或搜尋證據
 ```
 
@@ -505,7 +528,7 @@ Use $source-code-reading
 goal: 理解 [目標]
 entry: [入口]
 mode: [file / feature / module]
-expected_output: 將筆記寫入 [docs/code-reading/[target].md]。使用結構化 Markdown，至少保留範圍與入口、已確認、合理推論、待驗證、下一步；其餘欄位可依內容調整、合併或省略
+expected_output: 將筆記寫入 [docs/code-reading/[target].md]。使用結構化 Markdown，至少保留範圍與入口、已確認、合理推論、待驗證、證據衝突（若有）、下一步；其餘欄位可依內容調整、合併或省略
 constraints: [長度 / 範圍 / 只看哪些檔案 / 不看哪些檔案]
 ```
 
@@ -522,5 +545,6 @@ constraints: [長度 / 範圍 / 只看哪些檔案 / 不看哪些檔案]
 - 若只是修 bug 前想先掌握局部流程，優先指定 `constraints: 只看直接相關檔案`。
 - 若怕它讀太多，可指定 `max_depth`；不指定時，就讓它依最小閉環原則停止。
 - 若只要結論，不要長文，直接在 `expected_output` 寫「直接在對話中回答」或「先短答」。
-- 若你在意證據層級，直接在 `expected_output` 要求它輸出 `已確認 / 合理推論 / 待驗證` 三段。
-- 若你在意流程紀律，可以直接要求它依 `Step 0` 到 `Step 8` 的順序執行，但最終輸出仍以結果為主，不必逐步抄流程。
+- 若你在意證據層級，直接在 `expected_output` 要求它輸出 `已確認 / 合理推論 / 待驗證 / 證據衝突` 四段。
+- 若入口不清楚，可直接要求它在需要時讀 `references/deep-tracing.md`；若是特定技術棧，可要求它參考 `references/framework-playbooks.md`；若需要正式交接格式，可要求它參考 `references/output-contracts.md`。
+- 若你在意流程紀律，可以直接要求它依 `Step 0` 到 `Step 9` 的順序執行，但最終輸出仍以結果為主，不必逐步抄流程。
