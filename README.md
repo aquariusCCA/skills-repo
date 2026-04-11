@@ -36,7 +36,7 @@ skills-repo/
 - `source-code-refactoring`: 安全重構既有程式碼並保護行為。
 - `spec-to-code`: 將需求描述、規格或 ticket 落地成可驗證的程式碼變更。
 
-- 目前已經完善的 Skills: `study-notes-markdown`、`source-code-reading`
+- 目前已經完善的 Skills: `study-notes-markdown`、`source-code-reading`、`repair-study-notes`
 
 ## 新增 Skill
 
